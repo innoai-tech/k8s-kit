@@ -103,7 +103,6 @@ import (
 #Host: {
 	cwd!: wd.#WorkDir
 
-
 	role!: "controller+worker" | "controller" | "worker"
 	arch!: "amd64" | "arm64"
 
@@ -112,7 +111,7 @@ import (
 		diskName?: string
 	}
 
-	network:	{
+	network: {
 		interface: string | *"eth0"
 	}
 }

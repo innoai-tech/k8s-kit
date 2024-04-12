@@ -7,6 +7,7 @@ import (
 	"piper.octohelm.tech/wd"
 	"piper.octohelm.tech/file"
 	"piper.octohelm.tech/client"
+	"piper.octohelm.tech/exec"
 )
 
 #Deploy: {
@@ -25,7 +26,7 @@ import (
 		"arch": arch
 	}
 
-	k0s: {
+	k0s: file.#File & {
 		wd:       cwd
 		filename: "/usr/local/bin/k0s"
 	}
@@ -34,6 +35,19 @@ import (
 		k0s_bin: file.#Sync & {
 			srcFile: _bin.file
 			outFile: k0s
+		}
+
+		make_k0s_execable: exec.#Run & {
+			"cwd": k0s.wd
+			"cmd": "chmod +x \(k0s.filename)"
+		}
+
+		create_aliases: #CommandAliases & {
+			"cwd": cwd
+			"aliases": {
+				kubectl: "k0s kubectl"
+				ctr:     "k0s ctr"
+			}
 		}
 
 		if strings.Contains(role, "controller") {

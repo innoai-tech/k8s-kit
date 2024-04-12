@@ -63,39 +63,38 @@ import (
 		version: _bin.version
 	}
 
-	_x: client.#Group &  {
+	_x: client.#Group & {
 		export: {
-				for name, i in _airgap_images.images {
-					"\(name)": file.#WriteAsJSON & {
-						"outFile": {
-							"wd":       _tmp.dir
-							"filename": "\(name).kubepkg.json"
+			for name, i in _airgap_images.images {
+				"\(name)": file.#WriteAsJSON & {
+					"outFile": {
+						"wd":       _tmp.dir
+						"filename": "\(name).kubepkg.json"
+					}
+					"data": kubepkgspec.#KubePkg & {
+						"metadata": {
+							"name":      "\(name)"
+							"namespace": "kube-system"
 						}
-						"data": kubepkgspec.#KubePkg & {
-							"metadata": {
-								"name":      "\(name)"
-								"namespace": "kube-system"
-							}
-							spec: version: i.version
-							status: images: "\(i.image):\(i.version)": ""
-						}
+						spec: version: i.version
+						status: images: "\(i.image):\(i.version)": ""
 					}
 				}
 			}
+		}
 
-			airgap: {
-				for name, _ in _airgap_images.images  {
-					"\(name)": kubepkg.#Airgap & {
-						"platform":    "linux/\(arch)"
-						"kubepkgFile": export["\(name)"].file
-					}
+		airgap: {
+			for name, _ in _airgap_images.images {
+				"\(name)": kubepkg.#Airgap & {
+					"platform":    "linux/\(arch)"
+					"kubepkgFile": export["\(name)"].file
 				}
 			}
+		}
 	}
 
 	export: _x.export
 	airgap: _x.airgap
-
 
 	_images: #ImageSet & {network: provider: config.spec.network.provider}
 
