@@ -14,6 +14,7 @@ import (
 	cwd!:  wd.#WorkDir
 	role!: string
 
+	labels: [Name=string]: string
 	dataDir:    string | *"/data/k0s"
 	configFile: string | *"/etc/k0s/k0s.yaml"
 	tokenFile:  string | *"/etc/k0s/token"
@@ -51,6 +52,10 @@ import (
 
 			if strings.Contains(role, "controller") {
 				"--disable-components=helm,autopilot"
+			},
+
+			for label, value in labels {
+				"--labels=\(label)=\(value)"
 			},
 		], 2), " ")
 	}

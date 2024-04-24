@@ -79,6 +79,7 @@ import (
 				cwd:    h.cwd
 				arch:   h.arch
 				role:   h.role
+				labels: h.labels
 				config: _cluster_config
 
 				images: airgap["\(_name)"].images
@@ -114,4 +115,6 @@ import (
 	network: {
 		interface: string | *"eth0"
 	}
+
+	labels: [Name=string]: string
 }

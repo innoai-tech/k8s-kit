@@ -19,6 +19,7 @@ import (
 	dataDir:    string | *"/data/k0s"
 	configFile: string | *"/etc/k0s/k0s.yaml"
 
+	labels: [Name=string]:    string
 	manifests: [Name=string]: file.#File
 	images: [Name=string]:    file.#File
 
@@ -87,6 +88,7 @@ import (
 		"cwd":     cwd
 		"role":    role
 		"dataDir": dataDir
+		"labels":  labels
 	}
 
 	restart: #Restart & {
