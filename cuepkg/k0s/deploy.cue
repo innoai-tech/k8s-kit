@@ -15,6 +15,7 @@ import (
 	config!: #ClusterConfig
 	arch!:   string
 	role!:   string
+	k0sVersion!: string
 
 	dataDir:    string | *"/data/k0s"
 	configFile: string | *"/etc/k0s/k0s.yaml"
@@ -24,6 +25,7 @@ import (
 	images: [Name=string]:    file.#File
 
 	_bin: #Bin & {
+		"version": k0sVersion
 		"arch": arch
 	}
 

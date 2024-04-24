@@ -10,6 +10,7 @@ import (
 #Cluster: {
 	name!: string
 	host!: [Name=string]: #Host
+	k0sVersion!: string
 	network: {
 		provider: "kuberouter" | "calico" | *"kuberouter"
 	}
@@ -40,6 +41,7 @@ import (
 		for _name, h in host {
 			"\(_name)": {
 				core: #Airgap & {
+					"k0sVersion": k0sVersion
 					arch:   h.arch
 					role:   h.role
 					config: _cluster_config
@@ -76,6 +78,7 @@ import (
 	deploy: {
 		for _name, h in host {
 			"\(_name)": #Deploy & {
+				"k0sVersion": k0sVersion
 				cwd:    h.cwd
 				arch:   h.arch
 				role:   h.role
