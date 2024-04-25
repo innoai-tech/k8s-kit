@@ -42,9 +42,9 @@ import (
 			"\(_name)": {
 				core: #Airgap & {
 					"k0sVersion": k0sVersion
-					arch:   h.arch
-					role:   h.role
-					config: _cluster_config
+					arch:         h.arch
+					role:         h.role
+					config:       _cluster_config
 				}
 
 				addon: #AirgapAddon & {
@@ -79,11 +79,11 @@ import (
 		for _name, h in host {
 			"\(_name)": #Deploy & {
 				"k0sVersion": k0sVersion
-				cwd:    h.cwd
-				arch:   h.arch
-				role:   h.role
-				labels: h.labels
-				config: _cluster_config
+				cwd:          h.cwd
+				arch:         h.arch
+				role:         h.role
+				labels:       h.labels
+				config:       _cluster_config
 
 				images: airgap["\(_name)"].images
 

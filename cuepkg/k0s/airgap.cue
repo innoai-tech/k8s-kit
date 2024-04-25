@@ -46,14 +46,14 @@ import (
 }
 
 #Airgap: {
-	config!: #ClusterConfig
-	arch!:   string
-	role!:   string
+	config!:     #ClusterConfig
+	arch!:       string
+	role!:       string
 	k0sVersion!: string
 
 	_bin: #Bin & {
 		"version": k0sVersion
-		"arch": arch
+		"arch":    arch
 	}
 
 	_tmp: wd.#Temp & {

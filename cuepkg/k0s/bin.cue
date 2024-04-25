@@ -5,7 +5,7 @@ import (
 )
 
 #Bin: {
-	arch!:   string
+	arch!:    string
 	version!: string
 
 	_fetch: http.#Fetch & {

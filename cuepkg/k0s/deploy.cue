@@ -11,10 +11,10 @@ import (
 )
 
 #Deploy: {
-	cwd!:    wd.#WorkDir
-	config!: #ClusterConfig
-	arch!:   string
-	role!:   string
+	cwd!:        wd.#WorkDir
+	config!:     #ClusterConfig
+	arch!:       string
+	role!:       string
 	k0sVersion!: string
 
 	dataDir:    string | *"/data/k0s"
@@ -26,7 +26,7 @@ import (
 
 	_bin: #Bin & {
 		"version": k0sVersion
-		"arch": arch
+		"arch":    arch
 	}
 
 	k0s: file.#File & {
@@ -50,6 +50,43 @@ import (
 			"aliases": {
 				kubectl: "k0s kubectl"
 				ctr:     "k0s ctr"
+			}
+		}
+
+		// sync
+		// https://github.com/containerd/containerd/blob/main/docs/hosts.md#registry-configuration---introduction
+		enable_containerd_hosts: file.#WriteAsTOML & {
+			outFile: {
+				"wd":       cwd
+				"filename": "/etc/k0s/containerd.d/cr.toml"
+			}
+			data: {
+				plugins: "io.containerd.grpc.v1.cri": "registry": {
+					config_path: "/etc/containerd/certs.d"
+				}
+			}
+		}
+
+		if labels["nvidia.com/gpu.present"] == "true" {
+			enable_containerd_nvidia_runtime: file.#WriteAsTOML & {
+				outFile: {
+					"wd":       cwd
+					"filename": "/etc/k0s/containerd.d/nvidia.toml"
+				}
+				data: {
+					plugins: "io.containerd.grpc.v1.cri": "containerd": {
+						default_runtime_name: "nvidia"
+						runtimes: "nvidia": {
+							privileged_without_host_devices: false
+							runtime_engine:                  ""
+							runtime_root:                    ""
+							runtime_type:                    "io.containerd.runc.v1"
+							options: {
+								BinaryName: "/usr/bin/nvidia-container-runtime"
+							}
+						}
+					}
+				}
 			}
 		}
 
